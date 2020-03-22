@@ -1,11 +1,17 @@
 package com.zhymgc.controller;
 
+import com.zhymgc.entity.PageResult;
 import com.zhymgc.entity.Result;
 import com.zhymgc.entity.StatusCode;
 import com.zhymgc.pojo.Label;
 import com.zhymgc.service.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2020-3-15.
@@ -44,4 +50,20 @@ public class BaseController {
         labelService.deleteById(labelId);
         return new Result(true, StatusCode.OK, "success");
     }
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public Result findBySearch(@RequestBody Map searchMap) {
+        List<Label> labels = labelService.findSearch(searchMap);
+        return new Result(true, StatusCode.OK, "success", labels);
+    }
+
+    @RequestMapping(value = "/label/search/{page}/{size}", method = RequestMethod.POST)
+    public Result findByPage(@RequestBody Map searchMap,
+                             @PathVariable int page,
+                             @PathVariable int size) {
+        Page<Label> pageData = labelService.findByPage(searchMap, page, size);
+        return new Result(true,StatusCode.OK,"查询成功",new PageResult<>(pageData.getTotalElements(),pageData.getContent() ));
+    }
+
+
 }
