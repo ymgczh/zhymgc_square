@@ -30,6 +30,17 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	/*** 用户登陆 * @param mobile * @param password * @return */
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public Result login(String mobile, String password) {
+		User user = userService.findByMobileAndPassword(mobile, password);
+		if (user != null) {
+			return new Result(true, StatusCode.OK, "登陆成功");
+		} else {
+			return new Result(false, StatusCode.LOGINERROR, "用户名或密码错 误");
+		}
+	}
+
 	/*** 发送短信验证码 * @param mobile */
 	@RequestMapping(value = "/sendsms/{mobile}", method = RequestMethod.POST)
 	public Result sendsms(@PathVariable String mobile) {
