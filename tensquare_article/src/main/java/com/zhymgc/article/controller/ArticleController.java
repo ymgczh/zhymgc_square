@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zhymgc.article.pojo.Article;
 import com.zhymgc.article.service.ArticleService;
-
-import entity.PageResult;
-import entity.Result;
-import entity.StatusCode;
+import com.zhymgc.entity.PageResult;
+import com.zhymgc.entity.Result;
+import com.zhymgc.entity.StatusCode;
 /**
  * 控制器层
  * @author Administrator

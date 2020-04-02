@@ -1,7 +1,10 @@
 package com.zhymgc.user.controller;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhymgc.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +20,9 @@ import com.zhymgc.user.service.UserService;
 import com.zhymgc.entity.PageResult;
 import com.zhymgc.entity.Result;
 import com.zhymgc.entity.StatusCode;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 控制器层
  * @author Administrator
@@ -30,12 +36,20 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private JwtUtil jwtUtil;
+	@Autowired private HttpServletRequest request;
 	/*** 用户登陆 * @param mobile * @param password * @return */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public Result login(String mobile, String password) {
-		User user = userService.findByMobileAndPassword(mobile, password);
+	public Result login(@RequestBody Map<String,String> loginMap) {
+		User user = userService.findByMobileAndPassword(loginMap.get("mobile"), loginMap.get(" password"));
 		if (user != null) {
-			return new Result(true, StatusCode.OK, "登陆成功");
+			String token = jwtUtil.createJWT(user.getId(), user.getNickname(), "user");
+			Map map = new HashMap();
+			map.put("token", token);
+			map.put("name", user.getNickname());//昵称
+			map.put("avatar", user.getAvatar());//头像
+			return new Result(true, StatusCode.OK, "登陆成功", map);
 		} else {
 			return new Result(false, StatusCode.LOGINERROR, "用户名或密码错 误");
 		}
@@ -125,8 +139,26 @@ public class UserController {
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
+		String authHeader = request.getHeader("Authorization");
+		//获取头信 息
+		if (authHeader == null) {
+			return new Result(false, StatusCode.ACCESSERROR, "权限不足");
+		}
+		if (!authHeader.startsWith("Bearer ")) {
+			return new Result(false, StatusCode.ACCESSERROR, "权限不足");
+		}
+		String token = authHeader.substring(7);//提取token
+		Claims claims = jwtUtil.parseJWT(token);
+		if (claims == null) {
+			return new Result(
+					false, StatusCode.ACCESSERROR, "权限不足");
+		}
+		if (!"admin".equals(claims.get("roles"))) {
+			return new Result(false, StatusCode.ACCESSERROR, "权限不足");
+		}
 		userService.deleteById(id);
-		return new Result(true,StatusCode.OK,"删除成功");
+		return new Result(true,
+				StatusCode.OK, "删除成功");
 	}
 	
 }

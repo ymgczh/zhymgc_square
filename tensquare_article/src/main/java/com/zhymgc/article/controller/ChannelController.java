@@ -1,7 +1,9 @@
 package com.zhymgc.article.controller;
-import java.util.List;
 import java.util.Map;
 
+import com.zhymgc.entity.PageResult;
+import com.zhymgc.entity.Result;
+import com.zhymgc.entity.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,9 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zhymgc.article.pojo.Channel;
 import com.zhymgc.article.service.ChannelService;
 
-import entity.PageResult;
-import entity.Result;
-import entity.StatusCode;
 /**
  * 控制器层
  * @author Administrator
@@ -37,7 +36,7 @@ public class ChannelController {
 	 */
 	@RequestMapping(method= RequestMethod.GET)
 	public Result findAll(){
-		return new Result(true,StatusCode.OK,"查询成功",channelService.findAll());
+		return new Result(true, StatusCode.OK,"查询成功",channelService.findAll());
 	}
 	
 	/**

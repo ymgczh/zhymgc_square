@@ -3,6 +3,7 @@ package com.zhymgc.user.service;
 import com.zhymgc.user.dao.UserDao;
 import com.zhymgc.user.pojo.User;
 import com.zhymgc.utils.IdWorker;
+import com.zhymgc.utils.JwtUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,10 @@ public class UserService {
 	private IdWorker idWorker;
 	@Autowired private RedisTemplate redisTemplate;
 	@Autowired private RabbitTemplate rabbitTemplate;
+
+
+	@Autowired
+	private JwtUtil jwtUtil;
 
 	@Autowired
 	BCryptPasswordEncoder encoder;

@@ -1,5 +1,6 @@
 package com.zhymgc.qa;
 import com.zhymgc.utils.IdWorker;
+import com.zhymgc.utils.JwtUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,5 +15,7 @@ public class Application {
 	public IdWorker idWorkker(){
 		return new IdWorker(1, 1);
 	}
-	
+
+
+	@Bean public JwtUtil jwtUtil(){ return new JwtUtil(); }
 }
