@@ -5,6 +5,7 @@ import java.util.Map;
 import com.zhymgc.entity.PageResult;
 import com.zhymgc.entity.Result;
 import com.zhymgc.entity.StatusCode;
+import com.zhymgc.qa.client.LableClient;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,15 @@ public class ProblemController {
 	@Autowired
 	private ProblemService problemService;
 	@Autowired private HttpServletRequest request;
+
+	@Autowired
+	private LableClient lableClient;
+
+	@RequestMapping(value = "/label/{labelid}")
+	public Result findLabelById(@PathVariable String labelid) {
+		Result result = lableClient.findById(labelid);
+		return result;
+	}
 	
 	/**
 	 * 查询全部数据

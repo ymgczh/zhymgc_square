@@ -62,7 +62,7 @@ public class BaseController {
                              @PathVariable int page,
                              @PathVariable int size) {
         Page<Label> pageData = labelService.findByPage(searchMap, page, size);
-        return new Result(true,StatusCode.OK,"查询成功",new PageResult<>(pageData.getTotalElements(),pageData.getContent() ));
+        return new Result(true,StatusCode.OK,"查询成功",new PageResult<>(pageData.getTotalElements(),pageData.getContent()));
     }
 
 
